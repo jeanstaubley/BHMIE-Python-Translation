@@ -76,3 +76,28 @@ def main():
     refre = 1.55
     refim = 0.0
     refrel = complex(refre, refim) / refmed
+    print(f"     REFMED = {refmed:8.4f}   REFRE ={refre:14.6E}   REFIM = {refim:14.6E}")
+    rad = 0.525
+    wavel = 0.6328
+    x = 2.0 * math.pi * rad * refmed / wavel
+    print(f"     SPHERE RADIUS = {rad:7.3f}   WAVELENGTH = {wavel:7.4f}")
+    print(f"     SIZE PARAMETER ={x:8.3f}\n")
+    nang = 11
+    s1, s2, qext, qsca, qback = bhmie(x, refrel, nang)
+    print(f"\n QSCA= {qsca:13.6E}   QEXT = {qext:13.6E}   QBACK = {qback:13.6E}")
+    print("\n  ANGLE       S11             POL             S33             S34\n")
+    s11nor = 0.5 * (abs(s2[0])**2 + abs(s1[0])**2)
+    nn = 2 * nang - 1
+    dang = (math.pi / 2.0) / float(nang - 1)
+    for j in range(nn):
+        s11 = 0.5 * abs(s2[j])**2 + 0.5 * abs(s1[j])**2
+        s12 = 0.5 * abs(s2[j])**2 - 0.5 * abs(s1[j])**2
+        pol = -s12 / s11
+        prod = s2[j] * s1[j].conjugate()
+        s33 = (prod.real) / s11
+        s34 = (prod.imag) / s11
+        s11n = s11 / s11nor
+        ang = dang * float(j) * 57.2958  
+        print(f" {ang:6.2f}  {s11n:13.6E}  {pol:13.6E}  {s33:13.6E}  {s34:13.6E}")
+
+main()
